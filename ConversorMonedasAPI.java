@@ -6,6 +6,9 @@ import org.json.JSONObject;
 import java.util.Scanner;
 
 public class ConversorMonedasAPI {
+
+    private static final String API_KEY = "471e3cc9bc17d343ac040a32";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -21,7 +24,7 @@ public class ConversorMonedasAPI {
         double amount = scanner.nextDouble();
 
         try {
-            String url = "https://api.exchangerate-api.com/v4/latest/" + baseCurrency;
+            String url = "https://v6.exchangerate-api.com/v6/" + API_KEY + "/latest/" + baseCurrency;
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -31,9 +34,10 @@ public class ConversorMonedasAPI {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             JSONObject json = new JSONObject(response.body());
-            double exchangeRate = json.getJSONObject("rates").getDouble(targetCurrency);
+            double rate = json.getJSONObject("conversion_rates").getDouble(targetCurrency);
 
-            double result = amount * exchangeRate;
+            double result = amount * rate;
+
             System.out.println("\nResultado:");
             System.out.println(amount + " " + baseCurrency + " = " + result + " " + targetCurrency);
 
@@ -44,3 +48,4 @@ public class ConversorMonedasAPI {
         scanner.close();
     }
 }
+
